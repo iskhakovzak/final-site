@@ -161,8 +161,18 @@ class PortfolioApp {
         const videos = document.querySelectorAll('.portfolio-item[data-category="video"] video');
 
         videos.forEach(video => {
-            video.parentElement.addEventListener('mouseenter', () => video.play());
-            video.parentElement.addEventListener('mouseleave', () => video.pause());
+            const parent = video.parentElement;
+            parent.addEventListener('mouseenter', () => video.play());
+            parent.addEventListener('mouseleave', () => video.pause());
+
+            // Add touch event listener for mobile devices
+            parent.addEventListener('touchstart', () => {
+                if (video.paused) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+            });
         });
 
         filterBtns.forEach(btn => {
