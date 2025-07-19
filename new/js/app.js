@@ -4,7 +4,7 @@ const CONFIG = {
         name: 'Sarvinoz Usmanova',
         version: '2.0.0',
         debug: false,
-        defaultLanguage: 'ru',
+        defaultLanguage: 'en',
         supportedLanguages: ['en', 'ru', 'uz'],
         defaultTheme: 'dark',
     },
@@ -260,9 +260,20 @@ class PortfolioApp {
             };
             updateCursor();
 
-            document.querySelectorAll('a, button, .portfolio-item').forEach(el => {
+            document.querySelectorAll('a, button, .portfolio-item, .filter-btn, .lang-btn, .header-menu-item').forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
                 el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
+
+            document.querySelectorAll('h1, h2, h3, p, .hero-title, .contact-title').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    if (!cursor.classList.contains('hover')) {
+                        cursor.classList.add('text-hover');
+                    }
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('text-hover');
+                });
             });
         }
     }
