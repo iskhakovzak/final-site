@@ -1,440 +1,308 @@
-// ===== MAIN APPLICATION FILE =====
+// ===== CONFIGURATION =====
+const CONFIG = {
+    app: {
+        name: 'Sarvinoz Usmanova',
+        version: '2.0.0',
+        debug: false,
+        defaultLanguage: 'ru',
+        supportedLanguages: ['en', 'ru', 'uz'],
+        defaultTheme: 'dark',
+    },
+    scroll: {
+        smooth: true,
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        mouseMultiplier: 1,
+        touchMultiplier: 2,
+        infinite: false
+    },
+    cursor: {
+        enabled: true,
+    },
+    storage: {
+        theme: 'portfolio-theme',
+        language: 'portfolio-language',
+    }
+};
 
+// ===== UTILITIES =====
+class Utils {
+    static setStorage(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+        } catch (error) {
+            console.warn('Failed to save to localStorage:', error);
+        }
+    }
+
+    static getStorage(key, defaultValue = null) {
+        try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : defaultValue;
+        } catch (error) {
+            console.warn('Failed to read from localStorage:', error);
+            return defaultValue;
+        }
+    }
+}
+
+// ===== MAIN APPLICATION =====
 class PortfolioApp {
     constructor() {
         this.currentLanguage = CONFIG.app.defaultLanguage;
         this.currentTheme = CONFIG.app.defaultTheme;
-        this.isInitialized = false;
-        this.modules = {};
-        this.state = {
-            isLoading: true,
-            isScrolling: false,
-            isMenuOpen: false,
-            currentSection: 'hero'
-        };
-        
         this.init();
     }
 
-    async init() {
-        try {
-            // Wait for DOM to be ready
-            if (document.readyState === 'loading') {
-                await new Promise(resolve => {
-                    document.addEventListener('DOMContentLoaded', resolve);
-                });
-            }
+    init() {
+        this.waitForLibraries().then(() => {
+            this.setupSmoothScroll();
+            this.setupLanguageSwitcher();
+            this.setupPortfolio();
+            this.setupMobileMenu();
+            this.setupBackToTop();
+            this.setupIntroAnimation();
+            this.setupScrollAnimations();
+            this.setupCursor();
+            this.setupModal();
+            this.setupLogoNavigation();
+            document.getElementById('year').textContent = new Date().getFullYear();
+            document.body.classList.add('loaded');
+        }).catch(error => {
+            console.error(error);
+            // Fallback for essential functionality
+            this.setupLanguageSwitcher();
+            this.setupPortfolio();
+            this.setupMobileMenu();
+            this.setupBackToTop();
+            document.getElementById('year').textContent = new Date().getFullYear();
+            document.body.classList.add('loaded');
+        });
+        this.showLoadingScreen();
+    }
 
-            // Initialize core modules
-            await this.initializeModules();
-            
-            // Setup event listeners
-            this.setupEventListeners();
-            
-            // Initialize UI
-            this.initializeUI();
-            
-            // Start the application
-            this.start();
-            
-        } catch (error) {
-            console.error('Failed to initialize app:', error);
-            this.handleError(error);
+    showLoadingScreen() {
+        const loadingScreen = document.querySelector('.loading-screen');
+        if (loadingScreen) {
+            loadingScreen.style.display = 'flex';
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 800);
+            }, 7000);
         }
     }
 
-    async initializeModules() {
-        // Wait for external libraries
-        await this.waitForLibraries();
-        
-        // Initialize core modules
-        this.modules.smoothScroll = new SmoothScrollModule();
-        this.modules.cursor = new CursorModule();
-        this.modules.animations = new AnimationsModule();
-        this.modules.language = new LanguageModule();
-        this.modules.theme = new ThemeModule();
-        this.modules.portfolio = new PortfolioModule();
-        this.modules.navigation = new NavigationModule();
-        this.modules.accessibility = new AccessibilityModule();
-        
-        // Initialize modules
-        for (const [name, module] of Object.entries(this.modules)) {
-            if (module && typeof module.init === 'function') {
-                await module.init();
-            }
-        }
-    }
-
-    async waitForLibraries() {
+    waitForLibraries() {
         return new Promise((resolve, reject) => {
             let attempts = 0;
             const maxAttempts = 50; // 5 seconds max wait
-            
+
             const checkLibraries = () => {
                 attempts++;
                 if (typeof gsap !== 'undefined' && typeof Lenis !== 'undefined' && typeof SplitType !== 'undefined') {
                     resolve();
                 } else if (attempts >= maxAttempts) {
-                    reject(new Error('Libraries failed to load'));
+                    reject(new Error('Required libraries (GSAP, Lenis, SplitType) failed to load.'));
                 } else {
                     setTimeout(checkLibraries, 100);
                 }
             };
-            
+
             checkLibraries();
         });
     }
 
-    setupEventListeners() {
-        // Window events
-        window.addEventListener('resize', this.handleResize.bind(this));
-        window.addEventListener('scroll', this.handleScroll.bind(this));
-        window.addEventListener('beforeunload', this.handleBeforeUnload.bind(this));
-        
-        // Navigation events
-        document.addEventListener('click', this.handleGlobalClick.bind(this));
-        document.addEventListener('keydown', this.handleKeydown.bind(this));
-        
-        // Intersection Observer for sections
-        this.setupIntersectionObserver();
-        
-        // Performance monitoring
-        this.setupPerformanceMonitoring();
-    }
+    setupSmoothScroll() {
+        if (CONFIG.scroll.smooth && typeof Lenis !== 'undefined') {
+            const lenis = new Lenis({
+                duration: CONFIG.scroll.duration,
+                easing: CONFIG.scroll.easing,
+            });
 
-    initializeUI() {
-        // Set initial theme
-        this.modules.theme.setTheme(this.currentTheme);
-        
-        // Set initial language
-        this.modules.language.setLanguage(this.currentLanguage);
-        
-        // Initialize navigation
-        this.modules.navigation.init();
-        
-        // Setup portfolio
-        this.modules.portfolio.init();
-        
-        // Update year in footer
-        document.getElementById('year').textContent = new Date().getFullYear();
-    }
-
-    start() {
-        // Run intro animation immediately
-        this.runIntroAnimation();
-        
-        // Mark as initialized
-        this.isInitialized = true;
-        
-        // Dispatch custom event
-        this.dispatchEvent('app:ready');
-        
-        console.log('Portfolio app initialized successfully');
-    }
-
-
-
-    async runIntroAnimation() {
-        try {
-            const heroTitle = document.querySelector('.hero-title');
-            const heroImage = document.querySelector('.hero-image');
-            const heroSubtitle = document.querySelector('.hero-subtitle');
-            
-            if (!heroTitle || !heroImage) return;
-            
-            // Split text for animation
-            const heroTitleLines = new SplitType(heroTitle, { types: 'lines' });
-            const heroSubtitleLines = new SplitType(heroSubtitle, { types: 'lines' });
-            
-            // Set initial states
-            gsap.set(heroTitleLines.lines, { y: '100%' });
-            gsap.set(heroSubtitleLines.lines, { y: '100%' });
-            gsap.set(heroImage, { scale: 1.25, opacity: 0 });
-            
-            // Create timeline
-            const tl = gsap.timeline({ delay: 0.5 });
-            
-            tl.to(heroImage, {
-                scale: 1,
-                opacity: 1,
-                duration: 2,
-                ease: 'power3.out'
-            })
-            .to(heroTitleLines.lines, {
-                y: 0,
-                duration: 1.5,
-                ease: 'power3.out',
-                stagger: 0.1
-            }, '-=1.5')
-            .to(heroSubtitleLines.lines, {
-                y: 0,
-                duration: 1,
-                ease: 'power3.out',
-                stagger: 0.05
-            }, '-=1');
-            
-        } catch (error) {
-            console.warn('Intro animation failed:', error);
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+            this.lenis = lenis;
         }
     }
 
-    setupIntersectionObserver() {
-        const sections = document.querySelectorAll('section[id]');
-        const navLinks = document.querySelectorAll('.nav-link');
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const sectionId = entry.target.id;
-                    this.state.currentSection = sectionId;
-                    
-                    // Update navigation
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${sectionId}`) {
-                            link.classList.add('active');
-                        }
-                    });
-                    
-                    // Dispatch event
-                    this.dispatchEvent('section:visible', { sectionId });
+    setupLanguageSwitcher() {
+        const langBtns = document.querySelectorAll('.lang-btn, .mobile-lang-btn');
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.getAttribute('data-lang');
+                this.updateLanguage(lang);
+                Utils.setStorage(CONFIG.storage.language, lang);
+
+                langBtns.forEach(b => b.classList.remove('active'));
+                document.querySelectorAll(`[data-lang=${lang}]`).forEach(b => b.classList.add('active'));
+            });
+        });
+
+        const savedLang = Utils.getStorage(CONFIG.storage.language, CONFIG.app.defaultLanguage);
+        this.updateLanguage(savedLang);
+        document.querySelectorAll(`[data-lang=${savedLang}]`).forEach(b => b.classList.add('active'));
+    }
+
+    updateLanguage(lang) {
+        this.currentLanguage = lang;
+        document.querySelectorAll('[data-en]').forEach(el => {
+            el.textContent = el.getAttribute(`data-${lang}`);
+        });
+    }
+
+    setupPortfolio() {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
+        const videos = document.querySelectorAll('.portfolio-item[data-category="video"] video');
+
+        videos.forEach(video => {
+            video.parentElement.addEventListener('mouseenter', () => video.play());
+            video.parentElement.addEventListener('mouseleave', () => video.pause());
+        });
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+
+                portfolioItems.forEach(item => {
+                    const category = item.dataset.category;
+                    if (filter === 'all' || category === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    }
+
+    setupMobileMenu() {
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+
+        if (mobileMenuBtn && mobileMenuOverlay) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenuOverlay.classList.toggle('active');
+                mobileMenuBtn.classList.toggle('active');
+            });
+
+            mobileMenuOverlay.addEventListener('click', (e) => {
+                if (e.target === mobileMenuOverlay) {
+                    mobileMenuOverlay.classList.remove('active');
+                    mobileMenuBtn.classList.remove('active');
                 }
             });
-        }, {
-            threshold: 0.3,
-            rootMargin: '-20% 0px -20% 0px'
-        });
-        
-        sections.forEach(section => observer.observe(section));
+        }
     }
 
-    setupPerformanceMonitoring() {
-        // Monitor performance metrics
-        if ('performance' in window) {
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    const perfData = performance.getEntriesByType('navigation')[0];
-                    if (perfData) {
-                        console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
-                    }
-                }, 0);
+    setupBackToTop() {
+        const backToTop = document.querySelector('.back-to-top');
+        if (backToTop) {
+            backToTop.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (this.lenis) {
+                    this.lenis.scrollTo(0);
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             });
         }
     }
 
-    handleResize() {
-        // Debounce resize events
-        clearTimeout(this.resizeTimeout);
-        this.resizeTimeout = setTimeout(() => {
-            this.dispatchEvent('window:resize');
-            
-            // Update cursor for mobile
-            if (window.innerWidth <= CONFIG.breakpoints.tablet) {
-                this.modules.cursor?.disable();
-            } else {
-                this.modules.cursor?.enable();
-            }
-        }, 250);
+    setupIntroAnimation() {
+        const heroTitleLines = new SplitType('.hero-title', { types: 'lines' });
+        gsap.to(heroTitleLines.lines, {
+            y: 0,
+            duration: 1.5,
+            ease: 'power3.out',
+            stagger: 0.1,
+            delay: 0.2
+        });
     }
 
-    handleScroll() {
-        if (!this.state.isScrolling) {
-            this.state.isScrolling = true;
-            requestAnimationFrame(() => {
-                this.state.isScrolling = false;
+    setupScrollAnimations() {
+        gsap.registerPlugin(ScrollTrigger);
+        const header = document.querySelector('.header');
+
+        ScrollTrigger.create({
+            start: 'top top-=-100px',
+            onUpdate: self => {
+                header.classList.toggle('hidden', self.direction === 1 && self.scroll() > 200);
+                header.classList.toggle('scrolled', self.scroll() > 50);
+            }
+        });
+    }
+
+    setupCursor() {
+        if (CONFIG.cursor.enabled && window.innerWidth > 768) {
+            const cursor = document.getElementById('custom-cursor');
+            let mouseX = 0, mouseY = 0;
+            let cursorX = 0, cursorY = 0;
+
+            document.addEventListener('mousemove', e => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            const updateCursor = () => {
+                cursorX += (mouseX - cursorX) * 0.15;
+                cursorY += (mouseY - cursorY) * 0.15;
+                cursor.style.left = cursorX + 'px';
+                cursor.style.top = cursorY + 'px';
+                requestAnimationFrame(updateCursor);
+            };
+            updateCursor();
+
+            document.querySelectorAll('a, button, .portfolio-item').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
             });
         }
     }
 
-    handleGlobalClick(event) {
-        // Handle mobile menu toggle
-        if (event.target.closest('#menu-toggle')) {
-            this.toggleMobileMenu();
-        }
-        
-        // Handle back to top
-        if (event.target.closest('#back-to-top')) {
-            event.preventDefault();
-            this.scrollToTop();
-        }
-        
-        // Handle portfolio item clicks
-        if (event.target.closest('.portfolio-item')) {
-            const item = event.target.closest('.portfolio-item');
-            this.openPortfolioModal(item);
-        }
-        
-        // Handle modal close
-        if (event.target.closest('#modal-close') || event.target.closest('.modal')) {
-            this.closePortfolioModal();
-        }
-    }
+    setupModal() {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const closeBtn = modal.querySelector('.modal-close');
 
-    handleKeydown(event) {
-        // Escape key
-        if (event.key === 'Escape') {
-            this.closePortfolioModal();
-            this.closeMobileMenu();
-        }
-        
-        // Navigation keys
-        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-            event.preventDefault();
-            this.navigateSections(event.key === 'ArrowUp' ? -1 : 1);
-        }
-    }
-
-    handleBeforeUnload() {
-        // Save current state
-        localStorage.setItem(CONFIG.storage.language, this.currentLanguage);
-        localStorage.setItem(CONFIG.storage.theme, this.currentTheme);
-    }
-
-    toggleMobileMenu() {
-        const mobileMenu = document.getElementById('mobile-menu');
-        const menuToggle = document.getElementById('menu-toggle');
-        
-        if (mobileMenu && menuToggle) {
-            this.state.isMenuOpen = !this.state.isMenuOpen;
-            
-            if (this.state.isMenuOpen) {
-                mobileMenu.classList.add('active');
-                menuToggle.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            } else {
-                mobileMenu.classList.remove('active');
-                menuToggle.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        }
-    }
-
-    closeMobileMenu() {
-        if (this.state.isMenuOpen) {
-            this.toggleMobileMenu();
-        }
-    }
-
-    scrollToTop() {
-        if (this.modules.smoothScroll?.lenis) {
-            this.modules.smoothScroll.lenis.scrollTo(0);
-        } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }
-
-    openPortfolioModal(item) {
-        const modal = document.getElementById('modal');
-        const modalImage = document.getElementById('modal-image');
-        const modalTitle = document.getElementById('modal-title');
-        const modalDescription = document.getElementById('modal-description');
-        
-        if (modal && item) {
-            const image = item.querySelector('img, video');
-            const title = item.querySelector('.portfolio-label')?.textContent || 'Portfolio Item';
-            
-            if (modalImage) modalImage.src = image?.src || '';
-            if (modalTitle) modalTitle.textContent = title;
-            if (modalDescription) modalDescription.textContent = 'Portfolio item description';
-            
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    closePortfolioModal() {
-        const modal = document.getElementById('modal');
-        if (modal) {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    }
-
-    navigateSections(direction) {
-        const sections = Array.from(document.querySelectorAll('section[id]'));
-        const currentIndex = sections.findIndex(section => section.id === this.state.currentSection);
-        const nextIndex = currentIndex + direction;
-        
-        if (nextIndex >= 0 && nextIndex < sections.length) {
-            const targetSection = sections[nextIndex];
-            targetSection.scrollIntoView({ behavior: 'smooth' });
-        }
-    }
-
-    dispatchEvent(eventName, data = {}) {
-        const event = new CustomEvent(eventName, {
-            detail: { ...data, timestamp: Date.now() }
+        document.querySelectorAll('.portfolio-item[data-category="photo"]').forEach(item => {
+            item.addEventListener('click', () => {
+                const imgSrc = item.querySelector('img').src;
+                modalImage.src = imgSrc;
+                modal.classList.add('active');
+            });
         });
-        document.dispatchEvent(event);
+
+        closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
     }
 
-    handleError(error) {
-        console.error('Application error:', error);
-        
-        // Show user-friendly error message
-        this.showErrorMessage('An error occurred. Please refresh the page.');
-        
-        // Dispatch error event
-        this.dispatchEvent('app:error', { error: error.message });
-    }
-
-    showErrorMessage(message) {
-        // Create error toast
-        const toast = document.createElement('div');
-        toast.className = 'error-toast';
-        toast.textContent = message;
-        toast.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--error);
-            color: white;
-            padding: 1rem;
-            border-radius: 8px;
-            z-index: 10000;
-            animation: slideIn 0.3s ease;
-        `;
-        
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.remove();
-        }, 5000);
-    }
-
-    // Public API methods
-    getModule(name) {
-        return this.modules[name];
-    }
-
-    getState() {
-        return { ...this.state };
-    }
-
-    setLanguage(language) {
-        this.currentLanguage = language;
-        this.modules.language?.setLanguage(language);
-    }
-
-    setTheme(theme) {
-        this.currentTheme = theme;
-        this.modules.theme?.setTheme(theme);
-    }
-
-    refresh() {
-        // Reload the application
-        window.location.reload();
+    setupLogoNavigation() {
+        const logo = document.querySelector('.header-logo');
+        if (logo) {
+            logo.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (this.lenis) {
+                    this.lenis.scrollTo('#hero');
+                } else {
+                    document.querySelector('#hero').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
     }
 }
 
-// Initialize the app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    window.portfolioApp = new PortfolioApp();
+    new PortfolioApp();
 });
-
-// Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = PortfolioApp;
-} else {
-    window.PortfolioApp = PortfolioApp;
-} 
