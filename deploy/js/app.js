@@ -68,7 +68,7 @@ class PortfolioApp {
     async waitForLibraries() {
         return new Promise((resolve, reject) => {
             let attempts = 0;
-            const maxAttempts = 50; // 5 seconds max wait
+            const maxAttempts = 200; // 20 seconds max wait
             
             const checkLibraries = () => {
                 attempts++;
