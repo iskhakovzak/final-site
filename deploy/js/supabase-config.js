@@ -2,9 +2,9 @@
 
 class SupabaseManager {
     constructor() {
-        // Replace with your actual Supabase credentials
-        this.supabaseUrl = process.env.SUPABASE_URL || 'https://your-project.supabase.co';
-        this.supabaseKey = process.env.SUPABASE_ANON_KEY || 'your-anon-key';
+        // Get Supabase credentials from CONFIG
+        this.supabaseUrl = CONFIG.supabase.url;
+        this.supabaseKey = CONFIG.supabase.anonKey;
         this.supabase = null;
         this.init();
     }
