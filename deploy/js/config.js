@@ -293,7 +293,7 @@ const CONFIG = {
     // Supabase configuration
     supabase: {
         url: 'https://vxbfqtnfzjrcqhsdftcf.supabase.co',
-        anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4YmZxdG5mempyY3Foc2RmdGNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM1OTUzMzIsImV4cCI6MjA0OTE3MTMzMn0.example'
+        anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4YmZxdG5mempyY3Foc2RmdGNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM1OTUzMzIsImV4cCI6MjA0OTE3MTMzMn0.YOUR_ACTUAL_SUPABASE_ANON_KEY_HERE'
     },
 
     // Local storage keys
