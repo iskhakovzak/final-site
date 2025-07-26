@@ -112,7 +112,7 @@ class CursorModule {
             setTimeout(() => {
                 this.cursorFollower.style.left = e.clientX + 'px';
                 this.cursorFollower.style.top = e.clientY + 'px';
-            }, 100);
+            }, 50);
         });
 
         // Hover effects
@@ -181,13 +181,13 @@ class SmoothScrollModule {
 
     setupLenis() {
         this.lenis = new Lenis({
-            duration: CONFIG.scroll.duration,
+            duration: 1.0,
             easing: CONFIG.scroll.easing,
             orientation: 'vertical',
             gestureOrientation: 'vertical',
             smoothWheel: true,
-            wheelMultiplier: CONFIG.scroll.mouseMultiplier,
-            touchMultiplier: CONFIG.scroll.touchMultiplier,
+            wheelMultiplier: 1.2,
+            touchMultiplier: 2.5,
             infinite: CONFIG.scroll.infinite
         });
 
@@ -528,4 +528,4 @@ if (typeof module !== 'undefined' && module.exports) {
     window.NavigationModule = NavigationModule;
     window.PortfolioModule = PortfolioModule;
     window.AccessibilityModule = AccessibilityModule;
-} 
+}

@@ -18,9 +18,9 @@ const STATIC_FILES = [
 
 // Images to cache
 const IMAGE_FILES = [
-    'https://ik.imagekit.io/sarvinozusmanova/New%20Folder/IMG_4975.JPG?updatedAt=1752757683245',
-    'https://ik.imagekit.io/sarvinozusmanova/New%20Folder/IMG_9969.WEBP?updatedAt=1752757438569',
-    'https://ik.imagekit.io/sarvinozusmanova/New%20Folder/IMG_9959.WEBP?updatedAt=1752757438569'
+    'https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/vogue-editorial.jpg',
+    'https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/djafariy-campaign.jpg',
+    'https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/elle-magazine.jpg'
 ];
 
 // Install event - cache static files

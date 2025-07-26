@@ -37,24 +37,24 @@
     ExpiresActive On
     
     # Images
-    ExpiresByType image/jpg "access plus 1 year"
-    ExpiresByType image/jpeg "access plus 1 year"
-    ExpiresByType image/gif "access plus 1 year"
-    ExpiresByType image/png "access plus 1 year"
-    ExpiresByType image/webp "access plus 1 year"
-    ExpiresByType image/svg+xml "access plus 1 year"
-    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType image/jpg "access plus 6 months"
+    ExpiresByType image/jpeg "access plus 6 months"
+    ExpiresByType image/gif "access plus 6 months"
+    ExpiresByType image/png "access plus 6 months"
+    ExpiresByType image/webp "access plus 6 months"
+    ExpiresByType image/svg+xml "access plus 6 months"
+    ExpiresByType image/x-icon "access plus 6 months"
     
     # Video
-    ExpiresByType video/mp4 "access plus 1 year"
-    ExpiresByType video/webm "access plus 1 year"
-    ExpiresByType video/ogg "access plus 1 year"
+    ExpiresByType video/mp4 "access plus 3 months"
+    ExpiresByType video/webm "access plus 3 months"
+    ExpiresByType video/ogg "access plus 3 months"
     
     # CSS, JavaScript
-    ExpiresByType text/css "access plus 1 month"
-    ExpiresByType text/javascript "access plus 1 month"
-    ExpiresByType application/javascript "access plus 1 month"
-    ExpiresByType application/x-javascript "access plus 1 month"
+    ExpiresByType text/css "access plus 3 months"
+    ExpiresByType text/javascript "access plus 3 months"
+    ExpiresByType application/javascript "access plus 3 months"
+    ExpiresByType application/x-javascript "access plus 3 months"
     
     # Others
     ExpiresByType application/pdf "access plus 1 month"

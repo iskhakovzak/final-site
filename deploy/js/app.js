@@ -152,26 +152,26 @@ class PortfolioApp {
             gsap.set(heroImage, { scale: 1.25, opacity: 0 });
             
             // Create timeline
-            const tl = gsap.timeline({ delay: 0.5 });
+            const tl = gsap.timeline({ delay: 0.3 });
             
             tl.to(heroImage, {
                 scale: 1,
                 opacity: 1,
-                duration: 2,
+                duration: 1.5,
                 ease: 'power3.out'
             })
             .to(heroTitleLines.lines, {
                 y: 0,
-                duration: 1.5,
+                duration: 1.2,
                 ease: 'power3.out',
-                stagger: 0.1
-            }, '-=1.5')
+                stagger: 0.08
+            }, '-=1.2')
             .to(heroSubtitleLines.lines, {
                 y: 0,
-                duration: 1,
+                duration: 0.8,
                 ease: 'power3.out',
-                stagger: 0.05
-            }, '-=1');
+                stagger: 0.04
+            }, '-=0.8');
             
         } catch (error) {
             console.warn('Intro animation failed:', error);
