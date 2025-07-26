@@ -24,12 +24,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     
     <!-- GSAP & Other Libraries -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://unpkg.com/split-type" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.42/bundled/lenis.min.js" defer></script>
 
     <!-- Embedded CSS -->
+    <link rel="stylesheet" href="css/upload-interface.css">
     <style>
         :root {
             --background: #121212;
@@ -621,6 +623,30 @@
                 --light-gray: #333333;
             }
         }
+        
+        /* Admin Panel Toggle */
+        .admin-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--background);
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .admin-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-xl);
+        }
     </style>
 </head>
 <body class="loading">
@@ -789,7 +815,16 @@
             </div>
         </div>
     </footer>
+    
+    <!-- Admin Panel Toggle -->
+    <button class="admin-toggle" onclick="toggleAdminPanel()" aria-label="Toggle Admin Panel">
+        ⚙️
+    </button>
 
+    <!-- Load upload system -->
+    <script src="js/supabase-config.js"></script>
+    <script src="js/media-upload.js"></script>
+    
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         
@@ -1141,6 +1176,18 @@
 
         App.init();
     });
+    
+    // Admin panel toggle function
+    function toggleAdminPanel() {
+        if (window.mediaUploadManager) {
+            const uploadInterface = document.querySelector('.media-upload-interface');
+            if (uploadInterface.style.display === 'none' || !uploadInterface.style.display) {
+                window.mediaUploadManager.showUploadInterface();
+            } else {
+                window.mediaUploadManager.hideUploadInterface();
+            }
+        }
+    }
     </script>
 </body>
 </html>
