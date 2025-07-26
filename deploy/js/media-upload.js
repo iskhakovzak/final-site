@@ -380,14 +380,9 @@ class MediaUploadManager {
     }
 
     async loadExistingMedia() {
-        try {
-            const result = await this.supabaseManager.getPortfolioItems();
-            if (result.success) {
-                this.displayExistingMedia(result.data);
-            }
-        } catch (error) {
-            console.error('Failed to load existing media:', error);
-        }
+        // Use local CONFIG data instead of fetching from Supabase
+        const mediaItems = CONFIG.portfolio.items || [];
+        this.displayExistingMedia(mediaItems);
     }
 
     displayExistingMedia(mediaItems) {
