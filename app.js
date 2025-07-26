@@ -8,12 +8,12 @@ app.use(express.static(path.join(__dirname, 'deploy')));
 
 // Главная страница
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'deploy', 'seconss.html'));
+    res.sendFile(path.join(__dirname, 'deploy', 'index.html'));
 });
 
 // Обработка всех остальных маршрутов
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'deploy', 'seconss.html'));
+    res.sendFile(path.join(__dirname, 'deploy', 'index.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
