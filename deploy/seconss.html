@@ -362,8 +362,9 @@
         .portfolio-grid {
             margin-top: 10vh;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 3vw;
+            max-width: none;
         }
         
         .portfolio-item {
@@ -742,52 +743,153 @@
                     <button class="filter-btn" data-filter="video" data-en="Video" data-uz="Video" data-ru="Видео">Видео</button>
                 </div>
                 <div class="portfolio-grid">
-                    <!-- Photo Items -->
+                    <!-- Vogue Editorial -->
                     <div class="portfolio-item" data-category="photo">
                         <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/vogue-editorial.jpg" 
-                             alt="Fashion editorial for Vogue" 
-                             loading="lazy"
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x800/121212/EAEAEA?text=Image+Error';">
-                        <div class="portfolio-label">Vogue</div>
+                             alt="Vogue Editorial" loading="lazy">
+                        <div class="portfolio-label">Vogue Editorial</div>
                     </div>
+                    
+                    <!-- Djafariy Campaign -->
                     <div class="portfolio-item" data-category="photo">
                         <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/djafariy-campaign.jpg" 
-                             alt="Fashion campaign for Djafariy" 
-                             loading="lazy"
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x800/121212/EAEAEA?text=Image+Error';">
+                             alt="Djafariy Campaign" loading="lazy">
                         <div class="portfolio-label">Djafariy</div>
                     </div>
-                     <div class="portfolio-item" data-category="photo">
+                    
+                    <!-- Elle Magazine -->
+                    <div class="portfolio-item" data-category="photo">
                         <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/elle-magazine.jpg" 
-                             alt="Editorial for Elle magazine" 
-                             loading="lazy"
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x800/121212/EAEAEA?text=Image+Error';">
-                        <div class="portfolio-label">Elle</div>
+                             alt="Elle Magazine" loading="lazy">
+                        <div class="portfolio-label">Elle Magazine</div>
                     </div>
-                    <!-- Video Items -->
+                    
+                    <!-- Fashion Portrait 1 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/fashion-portrait-1.jpg" 
+                             alt="Fashion Portrait 1" loading="lazy">
+                        <div class="portfolio-label">Fashion Portrait</div>
+                    </div>
+                    
+                    <!-- Runway Show 1 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/runway-show-1.jpg" 
+                             alt="Runway Show 1" loading="lazy">
+                        <div class="portfolio-label">Paris Fashion Week</div>
+                    </div>
+                    
+                    <!-- Editorial Spread 1 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/editorial-spread-1.jpg" 
+                             alt="Editorial Spread 1" loading="lazy">
+                        <div class="portfolio-label">Editorial Spread</div>
+                    </div>
+                    
+                    <!-- Commercial Campaign 1 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/commercial-campaign-1.jpg" 
+                             alt="Commercial Campaign 1" loading="lazy">
+                        <div class="portfolio-label">Luxury Brand</div>
+                    </div>
+                    
+                    <!-- Beauty Shot 1 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/beauty-shot-1.jpg" 
+                             alt="Beauty Shot 1" loading="lazy">
+                        <div class="portfolio-label">Beauty Shot</div>
+                    </div>
+                    
+                    <!-- Fashion Editorial 2 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/fashion-editorial-2.jpg" 
+                             alt="Fashion Editorial 2" loading="lazy">
+                        <div class="portfolio-label">Fashion Editorial</div>
+                    </div>
+                    
+                    <!-- Portrait Session 1 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/portrait-session-1.jpg" 
+                             alt="Portrait Session 1" loading="lazy">
+                        <div class="portfolio-label">Studio Session</div>
+                    </div>
+                    
+                    <!-- Runway Show 2 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/runway-show-2.jpg" 
+                             alt="Runway Show 2" loading="lazy">
+                        <div class="portfolio-label">Milan Fashion Week</div>
+                    </div>
+                    
+                    <!-- Commercial Ad 1 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/commercial-ad-1.jpg" 
+                             alt="Commercial Ad 1" loading="lazy">
+                        <div class="portfolio-label">Fashion Brand</div>
+                    </div>
+                    
+                    <!-- Beauty Editorial 1 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/beauty-editorial-1.jpg" 
+                             alt="Beauty Editorial 1" loading="lazy">
+                        <div class="portfolio-label">Beauty Editorial</div>
+                    </div>
+                    
+                    <!-- Fashion Spread 1 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/fashion-spread-1.jpg" 
+                             alt="Fashion Spread 1" loading="lazy">
+                        <div class="portfolio-label">Fashion Spread</div>
+                    </div>
+                    
+                    <!-- Studio Portrait 1 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/studio-portrait-1.jpg" 
+                             alt="Studio Portrait 1" loading="lazy">
+                        <div class="portfolio-label">Studio Portrait</div>
+                    </div>
+                    
+                    <!-- Runway Show 3 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/runway-show-3.jpg" 
+                             alt="Runway Show 3" loading="lazy">
+                        <div class="portfolio-label">New York Fashion Week</div>
+                    </div>
+                    
+                    <!-- Commercial Campaign 2 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/commercial-campaign-2.jpg" 
+                             alt="Commercial Campaign 2" loading="lazy">
+                        <div class="portfolio-label">International Brand</div>
+                    </div>
+                    
+                    <!-- Beauty Shot 2 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/beauty-shot-2.jpg" 
+                             alt="Beauty Shot 2" loading="lazy">
+                        <div class="portfolio-label">Beauty Photography</div>
+                    </div>
+                    
+                    <!-- Editorial Feature 1 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/editorial-feature-1.jpg" 
+                             alt="Editorial Feature 1" loading="lazy">
+                        <div class="portfolio-label">Editorial Feature</div>
+                    </div>
+                    
+                    <!-- Portrait Collection 1 -->
+                    <div class="portfolio-item" data-category="photo">
+                        <img src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/photos/portrait-collection-1.jpg" 
+                             alt="Portrait Collection 1" loading="lazy">
+                        <div class="portfolio-label">Portrait Collection</div>
+                    </div>
+                    
+                    <!-- Fashion Reel 1 (Video) -->
                     <div class="portfolio-item" data-category="video">
                         <video loop muted playsinline preload="metadata"
-                               src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/videos/reel-1.mp4" 
-                               onerror="this.parentElement.style.display='none'"
-                               aria-label="Fashion reel video">
+                               src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/videos/fashion-reel-1.mp4"
+                               aria-label="Fashion Reel Video">
                         </video>
-                        <div class="portfolio-label">Reel 1</div>
-                    </div>
-                    <div class="portfolio-item" data-category="video">
-                        <video loop muted playsinline preload="metadata"
-                               src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/videos/backstage.mp4" 
-                               onerror="this.parentElement.style.display='none'"
-                               aria-label="Backstage video">
-                        </video>
-                        <div class="portfolio-label">Backstage</div>
-                    </div>
-                    <div class="portfolio-item" data-category="video">
-                         <video loop muted playsinline preload="metadata"
-                                src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/public/videos/campaign-ad.mp4" 
-                                onerror="this.parentElement.style.display='none'"
-                                aria-label="Campaign advertisement video">
-                        </video>
-                        <div class="portfolio-label">Campaign Ad</div>
+                        <div class="portfolio-label">Fashion Reel</div>
                     </div>
                 </div>
             </div>
