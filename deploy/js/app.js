@@ -68,14 +68,13 @@ class PortfolioApp {
     async waitForLibraries() {
         return new Promise((resolve, reject) => {
             let attempts = 0;
-            const maxAttempts = 200; // 20 seconds max wait
+            const maxAttempts = 50; // 5 seconds max wait
             
             const checkLibraries = () => {
                 attempts++;
-                if (typeof gsap !== 'undefined' && typeof Lenis !== 'undefined' && typeof SplitType !== 'undefined') {
+                // Check if libraries exist, if not just resolve anyway
+                if (typeof gsap !== 'undefined' || attempts >= maxAttempts) {
                     resolve();
-                } else if (attempts >= maxAttempts) {
-                    reject(new Error('Libraries failed to load'));
                 } else {
                     setTimeout(checkLibraries, 100);
                 }
@@ -142,36 +141,47 @@ class PortfolioApp {
             
             if (!heroTitle || !heroImage) return;
             
-            // Split text for animation
-            const heroTitleLines = new SplitType(heroTitle, { types: 'lines' });
-            const heroSubtitleLines = new SplitType(heroSubtitle, { types: 'lines' });
-            
-            // Set initial states
-            gsap.set(heroTitleLines.lines, { y: '100%' });
-            gsap.set(heroSubtitleLines.lines, { y: '100%' });
-            gsap.set(heroImage, { scale: 1.25, opacity: 0 });
-            
-            // Create timeline
-            const tl = gsap.timeline({ delay: 0.3 });
-            
-            tl.to(heroImage, {
-                scale: 1,
-                opacity: 1,
-                duration: 1.5,
-                ease: 'power3.out'
-            })
-            .to(heroTitleLines.lines, {
-                y: 0,
-                duration: 1.2,
-                ease: 'power3.out',
-                stagger: 0.08
-            }, '-=1.2')
-            .to(heroSubtitleLines.lines, {
-                y: 0,
-                duration: 0.8,
-                ease: 'power3.out',
-                stagger: 0.04
-            }, '-=0.8');
+            // Simple CSS animation fallback
+            if (typeof gsap !== 'undefined' && typeof SplitType !== 'undefined') {
+                // Split text for animation
+                const heroTitleLines = new SplitType(heroTitle, { types: 'lines' });
+                const heroSubtitleLines = heroSubtitle ? new SplitType(heroSubtitle, { types: 'lines' }) : null;
+                
+                // Set initial states
+                gsap.set(heroTitleLines.lines, { y: '100%' });
+                if (heroSubtitleLines) gsap.set(heroSubtitleLines.lines, { y: '100%' });
+                gsap.set(heroImage, { scale: 1.25, opacity: 0 });
+                
+                // Create timeline
+                const tl = gsap.timeline({ delay: 0.3 });
+                
+                tl.to(heroImage, {
+                    scale: 1,
+                    opacity: 1,
+                    duration: 1.5,
+                    ease: 'power3.out'
+                })
+                .to(heroTitleLines.lines, {
+                    y: 0,
+                    duration: 1.2,
+                    ease: 'power3.out',
+                    stagger: 0.08
+                }, '-=1.2');
+                
+                if (heroSubtitleLines) {
+                    tl.to(heroSubtitleLines.lines, {
+                        y: 0,
+                        duration: 0.8,
+                        ease: 'power3.out',
+                        stagger: 0.04
+                    }, '-=0.8');
+                }
+            } else {
+                // Fallback CSS animation
+                heroImage.style.opacity = '1';
+                heroImage.style.transform = 'scale(1)';
+                heroImage.style.transition = 'all 1.5s ease';
+            }
             
         } catch (error) {
             console.warn('Intro animation failed:', error);

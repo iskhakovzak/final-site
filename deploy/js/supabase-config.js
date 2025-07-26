@@ -11,10 +11,15 @@ class SupabaseManager {
 
     async init() {
         try {
-            // Initialize Supabase client
-            const { createClient } = supabase;
-            this.supabase = createClient(this.supabaseUrl, this.supabaseKey);
-            console.log('Supabase initialized successfully');
+            // Check if supabase is available
+            if (typeof supabase !== 'undefined' && supabase.createClient) {
+                // Initialize Supabase client
+                const { createClient } = supabase;
+                this.supabase = createClient(this.supabaseUrl, this.supabaseKey);
+                console.log('Supabase initialized successfully');
+            } else {
+                console.warn('Supabase library not available, skipping initialization');
+            }
         } catch (error) {
             console.error('Failed to initialize Supabase:', error);
         }

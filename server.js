@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, 'deploy')));
 
 // Handle all routes by serving the main HTML file
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'deploy', 'seconss.html'));
+    res.sendFile(path.join(__dirname, 'deploy', 'index.html'));
 });
 
 // Handle all other routes

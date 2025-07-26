@@ -15,28 +15,73 @@
     <title>Sarvinoz Usmanova / International Model</title>
     
     <!-- Preload critical resources -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@700;800&display=swap" as="style">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" as="script">
-    
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     
-    <!-- GSAP & Other Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-    <script src="https://unpkg.com/split-type" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.42/bundled/lenis.min.js" defer></script>
-
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/upload-interface.css">
+    
+    <style>
+        .admin-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .admin-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-text {
+            color: var(--text-primary);
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        body.loaded .loading-screen {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
 </head>
-<body class="loading">
+<body>
 
     <!-- Skip to main content link for accessibility -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -75,7 +120,7 @@
                      src="https://vxbfqtnfzjrcqhsdftcf.supabase.co/storage/v1/object/sarvinoz/pic/hero-image.jpg" 
                      alt="Portrait of Sarvinoz Usmanova" 
                      loading="eager"
-                     onerror="this.onerror=null;this.src='https://placehold.co/800x1200/121212/EAEAEA?text=Image+Not+Found';">
+                     onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&h=1200&fit=crop';">
             </div>
         </section>
 
@@ -128,7 +173,7 @@
                     <button class="filter-btn" data-filter="photo" data-en="Photo" data-uz="Foto" data-ru="Фото">Фото</button>
                     <button class="filter-btn" data-filter="video" data-en="Video" data-uz="Video" data-ru="Видео">Видео</button>
                 </div>
-                <div class="portfolio-grid">
+                <div class="portfolio-grid" id="portfolio-grid">
                     <!-- Dynamic Portfolio Grid - All 77 items will be loaded here -->
                 </div>
             </div>
@@ -149,7 +194,7 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-left">
-                <p>&copy; <span id="year"></span> Sarvinoz Usmanova</p>
+                <p>&copy; <span id="year">2024</span> Sarvinoz Usmanova</p>
             </div>
             <div class="footer-right">
                 <a href="#" class="back-to-top" data-en="Back to Top" data-uz="Yuqoriga" data-ru="Наверх">Наверх</a>
@@ -162,8 +207,30 @@
         ⚙️
     </button>
 
-    <!-- Load JavaScript -->
+    <!-- Modal for portfolio items -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <div class="modal-body">
+                <div class="modal-image-container">
+                    <div id="modal-image"></div>
+                </div>
+                <div class="modal-info">
+                    <h3 id="modal-title">Portfolio Item</h3>
+                    <p id="modal-description">Description</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Libraries -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+    
+    <!-- Application Scripts -->
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/components.js"></script>
@@ -173,17 +240,76 @@
     <script src="js/app.js"></script>
     
     <script>
+    // Simple initialization without waiting for libraries
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded');
+        
+        // Hide loading screen
+        setTimeout(() => {
+            document.body.classList.add('loaded');
+            const loadingScreen = document.querySelector('.loading-screen');
+            if (loadingScreen) {
+                loadingScreen.classList.add('hidden');
+            }
+        }, 1000);
+        
+        // Update year
+        const yearElement = document.getElementById('year');
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
+        }
+        
+        // Simple portfolio initialization
+        initSimplePortfolio();
+    });
+
+    // Simple portfolio without complex libraries
+    function initSimplePortfolio() {
+        const portfolioGrid = document.getElementById('portfolio-grid');
+        if (!portfolioGrid) return;
+        
+        // Create some sample portfolio items
+        const items = [
+            { title: 'Vogue Editorial', type: 'photo', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=600&fit=crop' },
+            { title: 'Fashion Portrait', type: 'photo', image: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=600&fit=crop' },
+            { title: 'Elle Magazine', type: 'photo', image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=600&fit=crop' },
+            { title: 'Beauty Shot', type: 'photo', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop' },
+            { title: 'Runway Paris', type: 'photo', image: 'https://images.unsplash.com/photo-1506629905607-bb5e0d6f0d8c?w=400&h=600&fit=crop' },
+            { title: 'Commercial Campaign', type: 'photo', image: 'https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=400&h=600&fit=crop' }
+        ];
+        
+        portfolioGrid.innerHTML = items.map(item => `
+            <div class="portfolio-item">
+                <img src="${item.image}" alt="${item.title}" loading="lazy">
+                <div class="portfolio-overlay">
+                    <div class="portfolio-info">
+                        <div class="portfolio-title">${item.title}</div>
+                        <div class="portfolio-category">${item.type}</div>
+                    </div>
+                </div>
+                <div class="portfolio-label">${item.type}</div>
+            </div>
+        `).join('');
+    }
+    
     // Admin panel toggle function
     function toggleAdminPanel() {
-        if (window.mediaUploadManager) {
-            const uploadInterface = document.querySelector('.media-upload-interface');
-            if (uploadInterface.style.display === 'none' || !uploadInterface.style.display) {
-                window.mediaUploadManager.showUploadInterface();
-            } else {
-                window.mediaUploadManager.hideUploadInterface();
-            }
-        }
+        alert('Admin panel would open here. Requires backend setup.');
     }
+    
+    // Simple smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
     </script>
 </body>
 </html>
